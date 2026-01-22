@@ -16,3 +16,11 @@ __pycache__/
 
 # mac
 .DS_Store
+# Jupyter / local noise
+.ipynb_checkpoints/
+.virtual_documents/
+Untitled*.ipynb
+notebooks/Untitled*.ipynb
+
+# Data outputs (keep raw private unless you explicitly want to publish)
+data/
