@@ -1,88 +1,106 @@
 # NHS Patient Flow Data Pipeline — Architecture
 
 ## Overview
-I built a simple but production-aligned data pipeline using a Bronze → Silver → Gold
-layered architecture to process NHS outpatient attendance data.
+I built a simple but robust Bronze → Silver → Gold data pipeline to process NHS outpatient attendance data.
+The pipeline is designed to preserve raw data, standardise it once, and support multiple business-ready outputs.
 
-The goal is to:
-- Preserve raw data safely
-- Standardise and validate it for reuse
-- Produce clean, business-ready aggregates for analysis
+The guiding principles are:
+- Raw data is never modified
+- Silver is reusable and schema-safe
+- Gold answers specific business questions
 
 ---
 
 ## Data Layers
 
-### Bronze — Raw ingestion
-**Purpose:** Protect the original data exactly as received.
+### 🥉 Bronze — Raw Ingestion
+**Purpose:** Preserve source data exactly as received.
 
-- Files are ingested without modification
-- Original structure, headers, and values are preserved
-- No cleaning, renaming, or aggregation is allowed
+- Stores raw Excel files
+- No cleaning, renaming, or type coercion
+- Acts as a forensic copy of the source
 
-**Why this matters:**  
-Bronze allows me to reprocess data safely if logic changes later.
+**What is allowed:**
+- File copying
+- Folder organisation
+- Basic inspection
 
-**Typical formats:** Excel, CSV  
-**Location:** `data/raw/`
+**What is forbidden:**
+- Renaming columns
+- Type conversion
+- Aggregation
+
+**Location:** data/raw/
+data/bronze/
 
 ---
 
-### Silver — Standardised analytical layer
-**Purpose:** Prepare data for analysis and reuse.
+### 🥈 Silver — Standardised Analytical Dataset
+**Purpose:** Prepare data once so it can support multiple analyses.
 
-In this layer, I:
-- Identify the correct worksheet safely
-- Fix headers and remove empty columns
-- Standardise column names to `snake_case`
+In Silver, I:
+- Select the correct worksheet safely
+- Remove empty columns
+- Standardise column names
 - Enforce consistent data types
-- Ensure unique column names (required for Parquet)
-- Add lineage metadata (`source_file`, `load_timestamp`)
+- Add lineage metadata
 
-**What is allowed here:**
-- Cleaning
-- Type enforcement
-- Schema consistency
+Silver produces a single, reusable Parquet file.
 
-**What is forbidden here:**
+**What is allowed:**
+- Cleaning and standardisation
+- Type coercion
+- Column renaming
+- Metadata columns (source file, load timestamp)
+
+**What is forbidden:**
 - Business logic
 - Aggregations
-- KPIs
+- KPI calculations
 
-**Format:** Parquet  
-**Location:** `data/silver/`
+**Output:** data/silver/rtt_provider_all_attendances.parquet
+---
+
+### 🥇 Gold — Business-Focused Outputs
+**Purpose:** Answer specific business questions clearly and safely.
+
+Each Gold script:
+- Reads from Silver
+- Produces ONE business output
+- Writes ONE Parquet file
+
+Gold outputs are independent of each other.
+
+**What is allowed:**
+- Aggregations
+- Ranking
+- Percentages
+- Sorting and filtering for insight
+
+**What is forbidden:**
+- Data cleaning
+- Schema fixes
+- Editing raw values
+
+**Current Gold Outputs:**
+- Attendances by specialty
+- Attendances by age band
+- Specialty share and cumulative contribution
+
+**Location:** data/gold/
 
 ---
 
-### Gold — Business logic & KPIs
-**Purpose:** Produce stakeholder-ready metrics.
+## Execution Model
 
-In this project, I aggregate outpatient attendances by:
-- Main specialty code
-- Main specialty description
+Each layer is executed manually and independently:
 
-This produces a table at the grain:
-> **One row per specialty**
+```bash
+# Run Silver once
+python src/pipelines/run_silver_rtt_provider.py
 
-**What is allowed here:**
-- Grouping
-- Aggregation
-- Sorting
-- KPI definitions
+# Run Gold outputs independently
+python src/pipelines/run_gold_attendances_by_specialty.py
+python src/pipelines/run_gold_attendances_by_age_band.py
+python src/pipelines/run_gold_specialty_share.py
 
-**What is forbidden here:**
-- Cleaning
-- Schema fixing
-- Guessing column meanings
-
-**Format:** Parquet  
-**Location:** `data/gold/`
-
----
-
-## Pipeline Execution Order
-
-1. Bronze (manual ingestion)
-2. Silver:
-   ```bash
-   python src/pipelines/run_silver_rtt_provider.py
