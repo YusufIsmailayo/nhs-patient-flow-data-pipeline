@@ -17,7 +17,7 @@ def main():
     print(f"Found {len(files)} raw file(s). Copying to bronze...")
 
     for src in files:
-        if src.is_file():
+        if src.is_file() and not src.name.startswith('.'):
             dst = BRONZE / src.name
             shutil.copy2(src, dst)
             print(f"  Copied: {src.name} → data/bronze/{src.name}")
