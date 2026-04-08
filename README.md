@@ -1,30 +1,50 @@
-# NHS Patient Flow Data Pipeline
+# NHS Outpatient Patient Flow Pipeline — 226 Million Records
 
-A reproducible Bronze → Silver → Gold data pipeline for analysing NHS outpatient attendance data.
+A production-style medallion architecture pipeline processing NHS outpatient 
 
-## Project Summary
+attendance data across England. Covers **226 million+ attendances** across 
 
-This project demonstrates how I design and implement a layered data pipeline
-to transform raw NHS outpatient attendance data into reusable analytical datasets
-and business-ready insights.
+**152 NHS Trusts** and **90 specialties**.
 
-The pipeline follows a Bronze → Silver → Gold pattern commonly used in
-production data engineering environments.
+---
 
-## What This Project Shows
+## The Problem
 
-- How I protect raw data integrity
-- How I standardise data once for reuse
-- How I separate data preparation from business logic
-- How I produce multiple Gold outputs from a single Silver dataset
+NHS outpatient data is published monthly by NHS England but arrives in raw, 
 
-## Key Outputs
+inconsistent formats that require significant engineering to make useful. 
 
-- Total attendances by specialty (90 specialties, 226M attendances)
-- Attendances by age band (26 age groups)
-- Specialty contribution, ranking, and cumulative share (Pareto analysis)
+This pipeline automates that entire process — from raw ingestion to 
 
-These outputs are designed to support reporting, dashboards, and policy analysis.
+analytics-ready outputs — using a Bronze → Silver → Gold medallion architecture.
+
+---
+
+## Key Findings
+
+| Metric | Value |
+
+|--------|-------|
+
+| Total attendances processed | 226,287,000+ |
+
+| NHS Trusts covered | 152 |
+
+| Specialties analysed | 90 |
+
+| Top specialty by volume | General Medicine |
+
+| Age groups tracked | 26 |
+
+---
+
+## Medium Article
+
+Full analysis and findings published in **Towards Artificial Intelligence**:
+
+👉 [I Processed 226 Million NHS Patient Records — Here's What I Found](https://medium.com/towards-artificial-intelligence/i-processed-226-million-nhs-patient-records-heres-what-i-found-c35455d3c5f1)
+
+---
 
 ---
 
@@ -64,3 +84,16 @@ python src/pipelines/run_gold_specialty_share.py
 
 For detailed design decisions, see [docs/architecture.md](docs/architecture.md).
 For column definitions, see [docs/data_dictionary.md](docs/data_dictionary.md).
+
+----
+
+---
+
+## Related Work
+
+- **Project 2:** [NHS RTT Incomplete Pathways Pipeline — 14 million patient pathways](https://github.com/YusufIsmailayo/nhs-rtt-incomplete-pathways-pipeline)
+- **Published in Towards Artificial Intelligence:** [The NHS Postcode Lottery Is Real — I Built a Pipeline to Measure It](https://medium.com/towards-artificial-intelligence/the-nhs-postcode-lottery-is-real-i-built-a-pipeline-to-measure-it-04b343f7953e)
+
+---
+
+*Built by [Yusuf Ismail](https://github.com/YusufIsmailayo) — Data Engineer focused on NHS pipelines and public sector analytics.*
