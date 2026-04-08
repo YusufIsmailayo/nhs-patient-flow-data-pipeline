@@ -23,17 +23,11 @@ analytics-ready outputs — using a Bronze → Silver → Gold medallion archite
 ## Key Findings
 
 | Metric | Value |
-
 |--------|-------|
-
 | Total attendances processed | 226,287,000+ |
-
 | NHS Trusts covered | 152 |
-
 | Specialties analysed | 90 |
-
 | Top specialty by volume | General Medicine |
-
 | Age groups tracked | 26 |
 
 ---
@@ -43,8 +37,6 @@ analytics-ready outputs — using a Bronze → Silver → Gold medallion archite
 Full analysis and findings published in **Towards Artificial Intelligence**:
 
 👉 [I Processed 226 Million NHS Patient Records — Here's What I Found](https://medium.com/towards-artificial-intelligence/i-processed-226-million-nhs-patient-records-heres-what-i-found-c35455d3c5f1)
-
----
 
 ---
 
