@@ -24,3 +24,20 @@ notebooks/Untitled*.ipynb
 
 # Data outputs (keep raw private unless you explicitly want to publish)
 data/
+
+# --- Never commit: secrets, working notes, drafts, private folders ---
+.env.*
+*.pem
+*.key
+credentials*.json
+token*.json
+.streamlit/secrets.toml
+HANDOFF*.md
+*handoff*
+social/
+Claude outputs/
+writing/
+drafts/
+article/
+_local/
+outreach/
